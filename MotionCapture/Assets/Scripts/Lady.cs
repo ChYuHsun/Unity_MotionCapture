@@ -6,8 +6,10 @@ public class Lady : MonoBehaviour
     private Animator Ani;       //動畫元件
     private Rigidbody Rig;      //剛體元件
 
-    [Header("速度"), Range(0f, 100f)]
+    [Header("走路速度"), Range(0f, 100f)]
     public float Speed = 1.5f;
+    [Header("旋轉速度"), Range(0f, 100f)]
+    public float turn = 1.5f;
 
 
     private void Start()
@@ -27,6 +29,11 @@ public class Lady : MonoBehaviour
     // 修飾詞 傳回類型 方法名稱 (參數) { 敘述 }
     // void 無回傳
 
+    private void Update()
+    {
+        Turn();
+    }
+
     private void FixedUpdate()
     {
         Walk();
@@ -35,13 +42,23 @@ public class Lady : MonoBehaviour
     }
 
     /// <summary>
-    /// 走路
+    /// 走路左右控制
     /// </summary>
     private void Walk()
     {
         Ani.SetBool(ParWalk, Input.GetAxisRaw("Vertical") != 0 || Input.GetAxisRaw("Horizontal") != 0);
-        Rig.AddForce(transform.forward * Input.GetAxisRaw("Vertical") * Speed);
+        //Rig.AddForce(transform.forward * Input.GetAxisRaw("Vertical") * Speed);
         //Rig.AddForce(0, 0, Input.GetAxisRaw("Vertical") * Speed);
+        Rig.AddForce(transform.forward * Input.GetAxisRaw("Vertical") * Speed + transform.right * Input.GetAxisRaw("Horizontal") * Speed);
+    }
+
+    /// <summary>
+    /// 旋轉
+    /// </summary>
+    private void Turn()
+    {
+        float x = Input.GetAxis("Mouse X");
+        transform.Rotate(0, x * turn * Time.deltaTime, 0);
     }
 
     /// <summary>
